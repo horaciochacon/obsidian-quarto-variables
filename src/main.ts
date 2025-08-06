@@ -4,7 +4,7 @@ import { VariableCache } from './modules/VariableCache';
 import { createPlaceholderRendererPlugin } from './modules/PlaceholderRenderer';
 import { ReadingPostProcessor } from './modules/ReadingPostProcessor';
 import { QuartoVariablesSettingTab } from './settings/SettingsTab';
-import { PluginSettings, DEFAULT_SETTINGS } from './types';
+import { PluginSettings, DEFAULT_SETTINGS, ProjectInfo } from './types';
 
 export default class QuartoVariablesPlugin extends Plugin {
   settings!: PluginSettings;
@@ -105,7 +105,7 @@ export default class QuartoVariablesPlugin extends Plugin {
     
     const projectInfo = await this.projectResolver.getProjectRoot(file);
     if (projectInfo) {
-      await this.variableCache.loadVariables(projectInfo);
+      this.preloadVariablesInBackground(projectInfo);
       
       if (this.settings.debugMode) {
         console.log('Project root:', projectInfo.root);
@@ -113,6 +113,20 @@ export default class QuartoVariablesPlugin extends Plugin {
       }
     } else if (this.settings.debugMode) {
       console.log('No Quarto project found for file:', file.path);
+    }
+  }
+
+  private async preloadVariablesInBackground(projectInfo: ProjectInfo): Promise<void> {
+    try {
+      await this.variableCache.loadVariables(projectInfo);
+      
+      if (this.settings.debugMode) {
+        console.log('Variables preloaded for project:', projectInfo.root);
+      }
+    } catch (error) {
+      if (this.settings.debugMode) {
+        console.error('Failed to preload variables:', error);
+      }
     }
   }
 

@@ -20,7 +20,13 @@ export class PlaceholderRenderer {
   private cacheVersion: number = 0;
   private currentProject: ProjectInfo | null = null;
   private debounceTimer: number | null = null;
+  private scrollDebounceTimer: number | null = null;
   private app: App;
+  private lastUpdate: {
+    docChanged: boolean;
+    viewportChanged: boolean;
+    selectionSet: boolean;
+  } = { docChanged: false, viewportChanged: false, selectionSet: false };
 
   constructor(
     private view: EditorView,
@@ -57,6 +63,8 @@ export class PlaceholderRenderer {
       }
       
       if (!this.currentProject) {
+        const widget = new VariableWidget(`{{<var ${match.key}>}}`, this.settings, false);
+        builder.add(match.from, match.to, Decoration.replace({ widget }));
         continue;
       }
       
@@ -75,26 +83,63 @@ export class PlaceholderRenderer {
   }
 
   async update(update: ViewUpdate): Promise<void> {
-    const shouldRebuild = 
-      update.docChanged || 
-      update.viewportChanged || 
-      update.selectionSet ||
-      this.cacheVersion !== this.variableCache.getCurrentVersion();
+    const cacheChanged = this.cacheVersion !== this.variableCache.getCurrentVersion();
     
-    if (shouldRebuild) {
-      this.scheduleRebuild();
+    this.lastUpdate.docChanged = this.lastUpdate.docChanged || update.docChanged;
+    this.lastUpdate.viewportChanged = this.lastUpdate.viewportChanged || update.viewportChanged;
+    this.lastUpdate.selectionSet = this.lastUpdate.selectionSet || update.selectionSet;
+    
+    if (update.docChanged || update.selectionSet || cacheChanged) {
+      this.scheduleRebuild('immediate');
+    } else if (update.viewportChanged) {
+      if (this.currentProject && this.variableCache.getCachedEntry(this.currentProject)) {
+        this.scheduleRebuild('immediate');
+      } else {
+        this.scheduleRebuild('scroll');
+      }
     }
   }
 
-  private scheduleRebuild(): void {
-    if (this.debounceTimer !== null) {
-      window.clearTimeout(this.debounceTimer);
+  private scheduleRebuild(type: 'immediate' | 'scroll' = 'immediate'): void {
+    if (type === 'scroll') {
+      if (this.scrollDebounceTimer !== null) {
+        window.clearTimeout(this.scrollDebounceTimer);
+      }
+      
+      this.scrollDebounceTimer = window.setTimeout(() => {
+        this.executeRebuild();
+        this.scrollDebounceTimer = null;
+      }, 100);
+    } else {
+      if (this.debounceTimer !== null) {
+        window.clearTimeout(this.debounceTimer);
+      }
+      if (this.scrollDebounceTimer !== null) {
+        window.clearTimeout(this.scrollDebounceTimer);
+        this.scrollDebounceTimer = null;
+      }
+      
+      if (this.currentProject && this.variableCache.getCachedEntry(this.currentProject)) {
+        this.executeRebuild();
+      } else {
+        this.debounceTimer = window.setTimeout(() => {
+          this.executeRebuild();
+          this.debounceTimer = null;
+        }, 16);
+      }
+    }
+  }
+
+  private executeRebuild(): void {
+    if (this.lastUpdate.viewportChanged && !this.lastUpdate.docChanged) {
+      this.scanner.clearCache();
     }
     
-    this.debounceTimer = window.setTimeout(() => {
-      this.rebuildDecorations();
-      this.debounceTimer = null;
-    }, 16);
+    this.rebuildDecorations();
+    
+    this.lastUpdate.docChanged = false;
+    this.lastUpdate.viewportChanged = false;
+    this.lastUpdate.selectionSet = false;
   }
 
   private async rebuildDecorations(): Promise<void> {
@@ -106,8 +151,12 @@ export class PlaceholderRenderer {
     
     if (!this.currentProject) {
       this.currentProject = await this.projectResolver.getProjectRoot(file);
-      if (this.currentProject) {
-        await this.variableCache.loadVariables(this.currentProject);
+    }
+    
+    if (this.currentProject) {
+      const cachedEntry = this.variableCache.getCachedEntry(this.currentProject);
+      if (!cachedEntry) {
+        this.loadVariablesInBackground(this.currentProject);
       }
     }
     
@@ -115,13 +164,26 @@ export class PlaceholderRenderer {
     this.decorations = this.buildDecorations();
   }
 
+  private async loadVariablesInBackground(projectInfo: ProjectInfo): Promise<void> {
+    try {
+      await this.variableCache.loadVariables(projectInfo);
+      
+      this.scheduleRebuild();
+    } catch (error) {
+      if (this.settings.debugMode) {
+        console.error('Failed to load variables in background:', error);
+      }
+    }
+  }
+
   async setFile(file: TFile): Promise<void> {
     if (file.extension === 'qmd') {
+      this.scanner.clearCache();
       this.currentProject = await this.projectResolver.getProjectRoot(file);
       if (this.currentProject) {
-        await this.variableCache.loadVariables(this.currentProject);
+        this.loadVariablesInBackground(this.currentProject);
       }
-      this.scheduleRebuild();
+      this.scheduleRebuild('immediate');
     }
   }
 
@@ -132,6 +194,9 @@ export class PlaceholderRenderer {
   destroy(): void {
     if (this.debounceTimer !== null) {
       window.clearTimeout(this.debounceTimer);
+    }
+    if (this.scrollDebounceTimer !== null) {
+      window.clearTimeout(this.scrollDebounceTimer);
     }
   }
 }

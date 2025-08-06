@@ -62,6 +62,10 @@ export class VariableCache {
     return this.getNestedValue(entry.data, key);
   }
 
+  getCachedEntry(projectInfo: ProjectInfo): CacheEntry | null {
+    return this.cache.get(projectInfo.root) || null;
+  }
+
   private getNestedValue(obj: any, path: string): string | undefined {
     const keys = path.split('.');
     let current = obj;
