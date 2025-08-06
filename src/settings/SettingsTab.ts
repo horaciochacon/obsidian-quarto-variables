@@ -85,6 +85,33 @@ export class QuartoVariablesSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
         }));
 
+    containerEl.createEl('h3', { text: 'Variables Pane' });
+
+    new Setting(containerEl)
+      .setName('Enable Variables Pane')
+      .setDesc('Show the Variables side pane for editing YAML variables')
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.enableVariablesPane)
+        .onChange(async (value) => {
+          this.plugin.settings.enableVariablesPane = value;
+          await this.plugin.saveSettings();
+          
+          // If disabling, close any open panes
+          if (!value) {
+            this.app.workspace.detachLeavesOfType('variables-pane');
+          }
+        }));
+
+    new Setting(containerEl)
+      .setName('Auto-open Variables Pane')
+      .setDesc('Automatically open the Variables pane when opening a QMD file')
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.autoOpenVariablesPane)
+        .onChange(async (value) => {
+          this.plugin.settings.autoOpenVariablesPane = value;
+          await this.plugin.saveSettings();
+        }));
+
     containerEl.createEl('h3', { text: 'About' });
     containerEl.createEl('p', { 
       text: 'This plugin replaces Quarto variable placeholders with their values from _variables.yml files.' 

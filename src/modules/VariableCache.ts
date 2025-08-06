@@ -1,15 +1,23 @@
 import { App, TFile, EventRef, Notice } from 'obsidian';
 import * as yaml from 'js-yaml';
 import { CacheEntry, ProjectInfo } from '@/types';
+import { VariableWriter, WriteResult } from './VariableWriter';
+import { YamlStructureParser, ParsedYamlStructure } from './YamlStructureParser';
 
 export class VariableCache {
   private cache: Map<string, CacheEntry> = new Map();
+  private structureCache: Map<string, ParsedYamlStructure> = new Map();
   private version: number = 0;
   private fileWatcher: EventRef | null = null;
   private lastErrorNotified: Map<string, number> = new Map();
   private readonly ERROR_NOTIFICATION_COOLDOWN = 60000; // 1 minute
+  private writer: VariableWriter;
+  private parser: YamlStructureParser;
 
-  constructor(private app: App) {}
+  constructor(private app: App) {
+    this.writer = new VariableWriter(app);
+    this.parser = new YamlStructureParser();
+  }
 
   async initialize(): Promise<void> {
     this.fileWatcher = this.app.vault.on('modify', async (file) => {
@@ -33,6 +41,12 @@ export class VariableCache {
       }
 
       const content = await this.app.vault.read(file);
+      
+      // Parse with structure preservation
+      const structure = this.parser.parse(content);
+      this.structureCache.set(projectInfo.root, structure);
+      
+      // Also do regular YAML parsing for backwards compatibility
       const data = yaml.load(content, { 
         schema: yaml.FAILSAFE_SCHEMA,
         json: true
@@ -90,6 +104,12 @@ export class VariableCache {
       if (file.path === projectVariablesPath) {
         try {
           const content = await this.app.vault.read(file);
+          
+          // Parse with structure preservation
+          const structure = this.parser.parse(content);
+          this.structureCache.set(root, structure);
+          
+          // Regular YAML parsing for backwards compatibility
           const data = yaml.load(content, { 
             schema: yaml.FAILSAFE_SCHEMA,
             json: true
@@ -127,7 +147,97 @@ export class VariableCache {
 
   clearCache(): void {
     this.cache.clear();
+    this.structureCache.clear();
     this.version++;
+  }
+
+  // New methods for bidirectional updates
+
+  getStructure(projectInfo: ProjectInfo): ParsedYamlStructure | null {
+    return this.structureCache.get(projectInfo.root) || null;
+  }
+
+  async updateVariable(projectInfo: ProjectInfo, variablePath: string, newValue: any): Promise<WriteResult> {
+    const structure = this.structureCache.get(projectInfo.root);
+    if (!structure) {
+      return {
+        success: false,
+        error: 'No structure cached for project'
+      };
+    }
+
+    const result = await this.writer.updateVariable(projectInfo, structure, variablePath, newValue);
+    
+    if (result.success) {
+      // Clear cache to force reload on next access
+      this.cache.delete(projectInfo.root);
+      this.structureCache.delete(projectInfo.root);
+      
+      // Reload to get fresh data
+      await this.loadVariables(projectInfo);
+    }
+
+    return result;
+  }
+
+  async addVariable(projectInfo: ProjectInfo, sectionName: string, key: string, value: any): Promise<WriteResult> {
+    const structure = this.structureCache.get(projectInfo.root);
+    if (!structure) {
+      return {
+        success: false,
+        error: 'No structure cached for project'
+      };
+    }
+
+    const result = await this.writer.addVariable(projectInfo, structure, sectionName, key, value);
+    
+    if (result.success) {
+      // Clear cache to force reload
+      this.cache.delete(projectInfo.root);
+      this.structureCache.delete(projectInfo.root);
+      
+      // Reload fresh data
+      await this.loadVariables(projectInfo);
+    }
+
+    return result;
+  }
+
+  async createVariablesFile(projectInfo: ProjectInfo, initialContent?: Record<string, any>): Promise<WriteResult> {
+    const result = await this.writer.createVariablesFile(projectInfo, initialContent);
+    
+    if (result.success) {
+      // Load the new file
+      await this.loadVariables(projectInfo);
+    }
+
+    return result;
+  }
+
+  // Helper method to get variable path for a node
+  getVariablePath(projectInfo: ProjectInfo, nodeKey: string, parentPath?: string): string {
+    if (parentPath) {
+      return `${parentPath}.${nodeKey}`;
+    }
+    return nodeKey;
+  }
+
+  // Method to check if a variable exists
+  hasVariable(projectInfo: ProjectInfo, variablePath: string): boolean {
+    const entry = this.cache.get(projectInfo.root);
+    if (!entry) return false;
+
+    const pathParts = variablePath.split('.');
+    let current = entry.data;
+
+    for (const part of pathParts) {
+      if (current === null || current === undefined || typeof current !== 'object') {
+        return false;
+      }
+      current = current[part];
+    }
+
+    return current !== undefined;
   }
 
   destroy(): void {
@@ -136,5 +246,6 @@ export class VariableCache {
       this.fileWatcher = null;
     }
     this.cache.clear();
+    this.structureCache.clear();
   }
 }

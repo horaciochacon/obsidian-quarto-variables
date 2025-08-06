@@ -7,6 +7,8 @@ export interface PluginSettings {
   placeholderColor: string;
   cacheTTL: number;
   debugMode: boolean;
+  enableVariablesPane: boolean;
+  autoOpenVariablesPane: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -15,7 +17,9 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   placeholderClass: 'quarto-variable',
   placeholderColor: '#7c3aed',
   cacheTTL: 3600000, // 1 hour in ms
-  debugMode: false
+  debugMode: false,
+  enableVariablesPane: true,
+  autoOpenVariablesPane: false
 };
 
 export interface VariableMatch {
