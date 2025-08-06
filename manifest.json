@@ -3,8 +3,8 @@
   "name": "Quarto Variables",
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
-  "description": "Live preview of Quarto variables from _variables.yml in your .qmd files",
-  "author": "horaciochacon",
+  "description": "Live preview of Quarto variables from _variables.yml in Obsidian",
+  "author": "Horacio Chacon",
   "authorUrl": "https://github.com/horaciochacon",
   "fundingUrl": "https://ko-fi.com/horaciochacon",
   "isDesktopOnly": true

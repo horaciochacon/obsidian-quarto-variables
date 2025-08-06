@@ -1,7 +1,7 @@
 {
   "name": "obsidian-quarto-variables",
   "version": "0.1.0",
-  "description": "Live preview of Quarto variables in Obsidian",
+  "description": "Live preview of Quarto variables from _variables.yml in Obsidian",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
@@ -14,7 +14,7 @@
     "quarto",
     "variables"
   ],
-  "author": "",
+  "author": "Horacio Chacon",
   "license": "MIT",
   "devDependencies": {
     "@codemirror/state": "^6.4.0",
