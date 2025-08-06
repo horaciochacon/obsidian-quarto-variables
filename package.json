@@ -1,6 +1,6 @@
 {
   "name": "obsidian-quarto-variables",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Live preview of Quarto variables in Obsidian",
   "main": "main.js",
   "scripts": {

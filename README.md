@@ -2,34 +2,48 @@
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/horaciochacon)
 
-Live preview of Quarto variables from `_variables.yml` in your `.qmd` files directly within Obsidian.
+An Obsidian plugin that brings **live preview** of [Quarto variables](https://quarto.org/docs/authoring/variables.html) directly into your Obsidian vault. Perfect for academic writing, research documentation, and scientific publishing workflows.
 
-> 💡 **New to Quarto?** [Quarto](https://quarto.org) is an open-source scientific and technical publishing system built on Pandoc. This plugin brings Quarto's variable system to Obsidian for seamless academic writing.
+> 💡 **What are Quarto Variables?** Quarto's [variable system](https://quarto.org/docs/authoring/variables.html) allows you to define reusable content in `_variables.yml` files and reference them throughout your documents using `{{< var key >}}` syntax. This plugin makes those variables visible in Obsidian's Live Preview mode.
 
-## Features
+## 🔗 Works Seamlessly With
+- **[QMD as MD](https://github.com/danieltomasz/qmd-as-md-obsidian)** plugin: Essential companion for `.qmd` file support in Obsidian
+- **Obsidian Live Preview**: Variables appear instantly as you type and scroll
+- **Multi-project workflows**: Supports multiple Quarto projects in one vault
 
-- **Live Preview**: See variable values in real-time while editing `.qmd` files
-- **Hot Reload**: Automatically updates when `_variables.yml` changes
-- **Multi-Project Support**: Works with multiple Quarto projects in the same vault
-- **Reading View Support**: Optional variable replacement in Reading mode
-- **Cursor-Aware**: Shows raw tokens when cursor is over them for easy editing
-- **Performance Optimized**: Viewport-only processing for large documents
-- **Error Handling**: Graceful handling of missing variables and YAML errors
+## ✨ Features
 
-## Installation
+- **🔄 Live Preview Integration**: Variables appear instantly in Obsidian's Live Preview mode
+- **⚡ High Performance**: Optimized scrolling with zero-delay updates for large documents  
+- **🔥 Hot Reload**: Automatically updates when you modify `_variables.yml` files
+- **🎯 Cursor-Aware Editing**: Raw `{{< var key >}}` syntax appears when cursor is positioned over variables
+- **📚 Multi-Project Support**: Handle multiple Quarto projects within a single Obsidian vault
+- **👁️ Reading View**: Optional variable replacement in Obsidian's Reading mode
+- **🛡️ Robust Error Handling**: Graceful handling of missing variables and YAML syntax errors
+- **🧠 Smart Caching**: Intelligent variable caching for optimal performance
 
-### From Obsidian Community Plugins (Recommended)
+## 📦 Installation
 
-1. Open Obsidian Settings
-2. Go to Community Plugins and disable Safe Mode
-3. Click Browse and search for "Quarto Variables"
-4. Install and enable the plugin
+### From Obsidian Community Plugins (Coming Soon)
 
-### Manual Installation
+1. Open Obsidian Settings (`Ctrl/Cmd + ,`)
+2. Go to **Community Plugins** and disable **Safe Mode** if enabled
+3. Click **Browse** and search for "Quarto Variables"
+4. Click **Install** and then **Enable**
+
+### Manual Installation (Current)
 
 1. Download the latest release from the [releases page](https://github.com/horaciochacon/obsidian-quarto-variables/releases)
-2. Extract the files to your vault's plugins folder: `VaultFolder/.obsidian/plugins/quarto-variables/`
-3. Reload Obsidian and enable the plugin in Settings > Community Plugins
+2. Extract the files to your vault's plugins folder: 
+   ```
+   YourVault/.obsidian/plugins/quarto-variables/
+   ```
+3. Reload Obsidian (`Ctrl/Cmd + R`) and enable the plugin in **Settings > Community Plugins**
+
+### Prerequisites
+
+- **Obsidian**: Version 1.5.0 or higher
+- **[QMD as MD](https://github.com/danieltomasz/qmd-as-md-obsidian)** plugin (recommended): For proper `.qmd` file syntax highlighting and editing support
 
 ### Development Installation
 
@@ -42,208 +56,157 @@ npm run build
 
 Then copy `main.js`, `styles.css`, and `manifest.json` to your vault's plugins folder.
 
-## Usage
+## 🚀 Usage
 
-### Basic Setup
+### Setting Up Your Obsidian Vault
 
-1. Create a `_quarto.yml` file in your project root
-2. Create a `_variables.yml` file in the same directory
-3. Define your variables in YAML format:
-
-```yaml
-# _variables.yml
-author: "Dr. Jane Smith"
-year: 2024
-project:
-  name: "My Research Project"
-  version: "1.0.0"
-
-stats:
-  participants: 150
-  response_rate: 0.87
-```
-
-### Using Variables in QMD Files
-
-Use the standard Quarto variable syntax in your `.qmd` files:
-
-```markdown
----
-title: "{{<var project.name>}}"
-author: "{{<var author>}}"
----
-
-# Introduction
-
-This study was conducted in {{<var year>}} by {{<var author>}}.
-
-We had {{<var stats.participants>}} participants with a {{<var stats.response_rate>}} response rate.
-```
-
-### Live Preview
-
-When you open a `.qmd` file in Obsidian's Live Preview mode, the plugin will:
-
-1. Find the nearest `_quarto.yml` file by walking up the directory tree
-2. Load variables from the corresponding `_variables.yml` file
-3. Replace `{{<var key>}}` placeholders with their values in real-time
-4. Update automatically when you modify `_variables.yml`
-
-### Cursor Editing
-
-When you place your cursor inside a variable placeholder, it temporarily shows the raw `{{<var key>}}` syntax so you can edit it easily.
-
-## Settings
-
-Access settings via Settings > Quarto Variables:
-
-- **Enable in Reading View**: Show variable replacements in Reading mode
-- **Highlight Unresolved Variables**: Add red wavy underline for missing variables
-- **Placeholder CSS Class**: Custom CSS class for styled variables
-- **Placeholder Color**: Color for resolved variable values
-- **Cache TTL**: How long to cache loaded variables (milliseconds)
-- **Debug Mode**: Enable console logging for troubleshooting
-
-## Project Structure
-
-The plugin supports multiple Quarto projects within a single Obsidian vault:
+Create Quarto projects within your Obsidian vault with this structure:
 
 ```
-vault/
-├── project-a/
-│   ├── _quarto.yml
-│   ├── _variables.yml
-│   └── chapter1.qmd
-└── project-b/
+Your Obsidian Vault/
+├── Research Project/
+│   ├── _quarto.yml          # Quarto project configuration
+│   ├── _variables.yml       # Your variables definition
+│   ├── manuscript.qmd       # Main document
+│   └── chapters/
+│       ├── introduction.qmd
+│       └── methods.qmd
+└── Another Project/
     ├── _quarto.yml
     ├── _variables.yml
     └── report.qmd
 ```
 
-Each `.qmd` file will use variables from its closest parent project.
+### 1. Create Your Variables File
 
-## Commands
+In your project folder, create a `_variables.yml` file following [Quarto's variable syntax](https://quarto.org/docs/authoring/variables.html):
+
+```yaml
+# _variables.yml
+author: "Dr. Jane Smith"
+institution: "University of Research"
+year: 2024
+project:
+  name: "My Research Project"
+  version: "1.0.0"
+  funding: "NSF Grant #12345"
+
+stats:
+  participants: 150
+  response_rate: 0.87
+  study_duration: "6 months"
+```
+
+### 2. Use Variables in Your QMD Files
+
+In your `.qmd` files, use the standard [Quarto variable syntax](https://quarto.org/docs/authoring/variables.html):
+
+```markdown
+---
+title: "{{< var project.name >}}"
+author: "{{< var author >}} ({{< var institution >}})"
+date: "{{< var year >}}"
+---
+
+# Introduction
+
+This {{< var study_duration >}} study was conducted in {{< var year >}} by {{< var author >}}.
+
+We recruited {{< var stats.participants >}} participants and achieved a {{< var stats.response_rate >}} response rate.
+
+*Funding: {{< var project.funding >}}*
+```
+
+### 3. See Variables in Live Preview
+
+- **In Live Preview**: Variables show their resolved values automatically
+- **When editing**: Place cursor over a variable to see the raw `{{< var key >}}` syntax  
+- **Auto-updates**: Changes to `_variables.yml` appear instantly in all documents
+
+## ⚙️ Configuration
+
+Access plugin settings in **Settings > Community Plugins > Quarto Variables**:
+
+- **📖 Enable in Reading View**: Show variable replacements in Reading mode
+- **🔍 Highlight Unresolved Variables**: Red underline for missing variables
+- **🎨 Placeholder Styling**: Customize variable appearance
+- **⏱️ Cache Settings**: Control variable caching behavior
+- **🐛 Debug Mode**: Enable console logging for troubleshooting
+
+## 📋 Available Commands
+
+Access these via Command Palette (`Ctrl/Cmd + P`):
 
 - **Refresh Quarto Variables**: Manually refresh all cached variables
 - **Toggle Highlight Unresolved**: Toggle highlighting of missing variables
 
-## Variable Resolution
+## 🧠 How Variables Work
 
-Variables are resolved using dot notation:
+Variables support nested structures using dot notation (following [Quarto's standard](https://quarto.org/docs/authoring/variables.html)):
 
 ```yaml
-# _variables.yml
-simple: "value"
-nested:
-  level1:
-    level2: "deep value"
+# _variables.yml  
+title: "My Research"
+author:
+  name: "Dr. Smith" 
+  email: "smith@university.edu"
+stats:
+  n_participants: 150
+  effect_size: 0.87
 ```
 
 ```markdown
-Simple: {{<var simple>}}           <!-- "value" -->
-Nested: {{<var nested.level1.level2>}}  <!-- "deep value" -->
+Title: {{< var title >}}                    <!-- "My Research" -->
+Author: {{< var author.name >}}             <!-- "Dr. Smith" -->
+Contact: {{< var author.email >}}           <!-- "smith@university.edu" -->
+Sample: {{< var stats.n_participants >}}    <!-- "150" -->
 ```
 
-### Supported Data Types
+## 🔧 Compatibility
 
-All YAML data types are converted to strings:
+- **Obsidian**: 1.5.0+ (Desktop only)
+- **[QMD as MD](https://github.com/danieltomasz/qmd-as-md-obsidian)**: Recommended for `.qmd` syntax highlighting
+- **Live Preview**: Required for real-time variable display
+- **Reading View**: Optional variable replacement available
 
-- Strings: `"hello"` → `hello`
-- Numbers: `42` → `42`
-- Booleans: `true` → `true`
-- Arrays: `[1, 2, 3]` → `1,2,3`
+## 🎯 Performance
 
-## Performance
+Optimized for large documents and many variables:
+- **⚡ Zero-delay updates** when variables are cached
+- **🔄 Smart scrolling** with 100ms debouncing for uncached content  
+- **💾 Intelligent caching** with automatic cleanup
+- **👀 Viewport-only processing** for memory efficiency
 
-The plugin is optimized for performance:
+## ❓ Troubleshooting
 
-- **Viewport-only processing**: Only processes visible text
-- **Debounced updates**: Batches rapid changes
-- **Regex caching**: Compiled patterns for fast matching
-- **Memory limit**: <2MB per editor instance
-- **Target performance**: <5ms per 1,000 lines
+### Variables Not Showing?
+1. Ensure you have a `_quarto.yml` file in your project root
+2. Check that `_variables.yml` is in the same folder as `_quarto.yml`
+3. Verify YAML syntax is valid
+4. Try the "Refresh Quarto Variables" command
 
-## Error Handling
+### Performance Issues?
+1. Enable Debug Mode in settings to check console for errors
+2. Use "Refresh Quarto Variables" command to clear cache
+3. Check that variable names use valid syntax (letters, numbers, dots, underscores only)
 
-### Missing Variables
+## 🤝 Contributing
 
-Unresolved variables can be:
-- Left as-is (default behavior)
-- Highlighted with red wavy underline (configurable)
+We welcome contributions! Please:
 
-### YAML Errors
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests  
+4. Ensure all tests pass: `npm test`
+5. Submit a pull request
 
-- Malformed YAML shows a one-time notification
-- Plugin continues to work with cached data
-- Errors logged to console in debug mode
-
-### Missing Files
-
-- Missing `_variables.yml` files are handled gracefully
-- One-time notification shown per project
-- Plugin continues to work without variables
-
-## Compatibility
-
-- **Obsidian**: v1.5.0+
-- **qmd-as-md Plugin**: Fully compatible
-- **CodeMirror 6**: Uses latest APIs
-- **Platforms**: Desktop only (uses Node.js APIs)
-
-## Development
-
-### Setup
-
+### Development Setup
 ```bash
 git clone https://github.com/horaciochacon/obsidian-quarto-variables.git
 cd obsidian-quarto-variables
 npm install
-```
-
-### Commands
-
-```bash
 npm run dev     # Development build with hot reload
-npm run build   # Production build  
-npm run test    # Run unit tests
 ```
-
-### Testing
-
-The plugin includes comprehensive tests:
-
-- Unit tests for core modules
-- Integration tests with example vault
-- Performance benchmarks
-- Mock Obsidian API
-
-Run tests with: `npm test`
-
-### Architecture
-
-```
-src/
-├── main.ts                    # Plugin entry point
-├── modules/
-│   ├── ProjectResolver.ts     # Find Quarto projects  
-│   ├── VariableCache.ts       # Load and cache YAML
-│   ├── PlaceholderScanner.ts  # Regex pattern matching
-│   ├── VariableWidget.ts      # CodeMirror widget
-│   ├── PlaceholderRenderer.ts # Live Preview rendering
-│   └── ReadingPostProcessor.ts # Reading mode support
-├── settings/
-│   └── SettingsTab.ts         # Configuration UI
-└── types/
-    └── index.ts               # TypeScript definitions
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Ensure all tests pass: `npm test`
-5. Submit a pull request
 
 ## License
 
