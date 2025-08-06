@@ -1,0 +1,39 @@
+---
+title: "Example Quarto Document"
+author: "{{<var author>}}"
+date: "{{<var year>}}"
+---
+
+# Introduction
+
+Welcome to {{<var project.name>}} version {{<var version>}}.
+
+## Project Overview
+
+{{<var project.description>}}
+
+You can find the source code at: {{<var project.repo>}}
+
+## Study Statistics
+
+Our study included {{<var stats.participants>}} participants with a response rate of {{<var stats.response_rate>}}.
+
+The confidence level was set at {{<var stats.confidence_level>}} with a margin of error of {{<var stats.margin_error>}}.
+
+## Configuration
+
+The database is hosted at {{<var config.database.host>}}:{{<var config.database.port>}} and connects to the {{<var config.database.name>}} database.
+
+API endpoint: {{<var config.api.endpoint>}}/{{<var config.api.version>}}
+
+## Scientific Constants
+
+- Pi: {{<var constants.pi>}}
+- Euler's number: {{<var constants.e>}}
+- Speed of light: {{<var constants.speed_of_light>}} m/s
+
+## Undefined Variables
+
+This variable doesn't exist: {{<var undefined.variable>}}
+
+Nested undefined: {{<var config.missing.key>}}

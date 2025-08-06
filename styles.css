@@ -1,0 +1,40 @@
+/* Quarto Variables Plugin Styles */
+
+.quarto-variable {
+  font-weight: 500;
+  background: rgba(116, 58, 237, 0.1);
+  border-radius: 2px;
+  padding: 1px 2px;
+}
+
+.quarto-variable-unresolved {
+  color: #ef4444 !important;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Dark mode support */
+.theme-dark .quarto-variable {
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.theme-dark .quarto-variable-unresolved {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .quarto-variable {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .quarto-variable,
+  .quarto-variable-unresolved {
+    transition: none;
+  }
+}

@@ -1,0 +1,7 @@
+title: "Other Project Variables"
+author: "Different Author"
+type: "website"
+
+site:
+  url: "https://other-project.example.com"
+  analytics: "GA-123456789"

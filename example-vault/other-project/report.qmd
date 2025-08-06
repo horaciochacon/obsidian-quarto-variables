@@ -1,0 +1,16 @@
+---
+title: "{{<var title>}}"
+author: "{{<var author>}}"
+---
+
+# {{<var title>}}
+
+This is a different project by {{<var author>}}.
+
+Project type: {{<var type>}}
+Site URL: {{<var site.url>}}
+Analytics ID: {{<var site.analytics>}}
+
+## Testing Multi-Project Support
+
+This file should resolve variables from the `other-project/_variables.yml` file, not the root project.

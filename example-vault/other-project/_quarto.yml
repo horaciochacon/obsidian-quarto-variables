@@ -1,0 +1,9 @@
+project:
+  type: website
+
+website:
+  title: "Other Project"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home

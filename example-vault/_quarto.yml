@@ -1,0 +1,18 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Example Quarto Book"
+  author: "Test Author"
+  date: "2024-01-01"
+  chapters:
+    - index.qmd
+    - docs/chapter1.qmd
+    - docs/chapter2.qmd
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: report

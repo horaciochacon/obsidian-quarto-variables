@@ -1,0 +1,92 @@
+---
+title: "Chapter 2: Results and Analysis"
+---
+
+# Results and Analysis
+
+## Performance Testing
+
+This chapter contains a large amount of text with many variable references to test performance.
+
+{{<var author>}} conducted extensive analysis in {{<var year>}} for the {{<var project.name>}} project.
+
+## Repeated Variables for Performance Testing
+
+### Section 1
+Author: {{<var author>}}
+Year: {{<var year>}}
+Project: {{<var project.name>}}
+Version: {{<var version>}}
+Participants: {{<var stats.participants>}}
+Response Rate: {{<var stats.response_rate>}}
+Confidence Level: {{<var stats.confidence_level>}}
+Margin of Error: {{<var stats.margin_error>}}
+
+### Section 2
+Author: {{<var author>}}
+Year: {{<var year>}}
+Project: {{<var project.name>}}
+Version: {{<var version>}}
+Participants: {{<var stats.participants>}}
+Response Rate: {{<var stats.response_rate>}}
+Confidence Level: {{<var stats.confidence_level>}}
+Margin of Error: {{<var stats.margin_error>}}
+
+### Section 3
+Database Host: {{<var config.database.host>}}
+Database Port: {{<var config.database.port>}}
+Database Name: {{<var config.database.name>}}
+API Endpoint: {{<var config.api.endpoint>}}
+API Version: {{<var config.api.version>}}
+
+### Section 4
+Pi: {{<var constants.pi>}}
+E: {{<var constants.e>}}
+Speed of Light: {{<var constants.speed_of_light>}}
+
+### Section 5
+Author: {{<var author>}}
+Year: {{<var year>}}
+Project: {{<var project.name>}}
+Version: {{<var version>}}
+
+### Section 6
+This section contains {{<var stats.participants>}} references to test the performance with many variables in a single document.
+The response rate was {{<var stats.response_rate>}} with confidence level {{<var stats.confidence_level>}}.
+Database: {{<var config.database.name>}} on {{<var config.database.host>}}:{{<var config.database.port>}}
+API: {{<var config.api.endpoint>}}/{{<var config.api.version>}}
+Constants: π={{<var constants.pi>}}, e={{<var constants.e>}}, c={{<var constants.speed_of_light>}}
+
+### Section 7
+Repeat of all variables:
+{{<var author>}} - {{<var year>}} - {{<var project.name>}} - {{<var version>}}
+{{<var stats.participants>}} - {{<var stats.response_rate>}} - {{<var stats.confidence_level>}} - {{<var stats.margin_error>}}
+{{<var config.database.host>}} - {{<var config.database.port>}} - {{<var config.database.name>}}
+{{<var config.api.endpoint>}} - {{<var config.api.version>}}
+{{<var constants.pi>}} - {{<var constants.e>}} - {{<var constants.speed_of_light>}}
+
+### Section 8
+More repetitions for performance testing:
+Author: {{<var author>}} | Year: {{<var year>}} | Project: {{<var project.name>}}
+Participants: {{<var stats.participants>}} | Response Rate: {{<var stats.response_rate>}}
+Database: {{<var config.database.name>}} | API: {{<var config.api.endpoint>}}
+Pi: {{<var constants.pi>}} | E: {{<var constants.e>}}
+
+### Section 9
+Final section with mixed variables and text:
+The study by {{<var author>}} in {{<var year>}} examined {{<var project.name>}} version {{<var version>}}.
+With {{<var stats.participants>}} participants and {{<var stats.response_rate>}} response rate.
+Data stored in {{<var config.database.name>}} and accessed via {{<var config.api.endpoint>}}.
+Using mathematical constants π={{<var constants.pi>}} and e={{<var constants.e>}}.
+
+## Edge Cases
+
+### Whitespace variations
+{{<var author>}}
+{{ <var author> }}
+{{< var author >}}
+{{ < var author > }}
+
+### Undefined variables
+Missing: {{<var missing.variable>}}
+Nested missing: {{<var config.missing.deeply.nested.key>}}

@@ -1,0 +1,11 @@
+{
+  "id": "quarto-variables",
+  "name": "Quarto Variables",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Live preview of Quarto variables from _variables.yml in your .qmd files",
+  "author": "horaciochacon",
+  "authorUrl": "https://github.com/horaciochacon",
+  "fundingUrl": "https://ko-fi.com/horaciochacon",
+  "isDesktopOnly": true
+}

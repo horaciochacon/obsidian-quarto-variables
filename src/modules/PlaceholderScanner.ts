@@ -1,0 +1,62 @@
+import { EditorView } from '@codemirror/view';
+import { VariableMatch } from '@/types';
+
+export class PlaceholderScanner {
+  private static readonly VAR_REGEX = /\{\{\s*<\s*var\s+([a-zA-Z0-9_.]+)\s*>\s*\}\}/g;
+  private compiledRegex: RegExp;
+
+  constructor() {
+    this.compiledRegex = new RegExp(PlaceholderScanner.VAR_REGEX.source, 'g');
+  }
+
+  findAllInRange(view: EditorView, from: number, to: number): VariableMatch[] {
+    const text = view.state.doc.sliceString(from, to);
+    const matches: VariableMatch[] = [];
+    
+    this.compiledRegex.lastIndex = 0;
+    let match: RegExpExecArray | null;
+    
+    while ((match = this.compiledRegex.exec(text)) !== null) {
+      matches.push({
+        from: from + match.index,
+        to: from + match.index + match[0].length,
+        key: match[1]
+      });
+    }
+    
+    return matches;
+  }
+
+  findAll(text: string, offset: number = 0): VariableMatch[] {
+    const matches: VariableMatch[] = [];
+    
+    this.compiledRegex.lastIndex = 0;
+    let match: RegExpExecArray | null;
+    
+    while ((match = this.compiledRegex.exec(text)) !== null) {
+      matches.push({
+        from: offset + match.index,
+        to: offset + match.index + match[0].length,
+        key: match[1]
+      });
+    }
+    
+    return matches;
+  }
+
+  matchAt(text: string, position: number): VariableMatch | null {
+    const matches = this.findAll(text);
+    
+    for (const match of matches) {
+      if (position >= match.from && position <= match.to) {
+        return match;
+      }
+    }
+    
+    return null;
+  }
+
+  static isValidKey(key: string): boolean {
+    return key.length > 0 && /^[a-zA-Z0-9_.]+$/.test(key) && !key.startsWith('.') && !key.endsWith('.') && !key.includes('..');
+  }
+}
