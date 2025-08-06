@@ -1,9 +1,10 @@
-import { Plugin, TFile, MarkdownView } from 'obsidian';
+import { Plugin, TFile, MarkdownView, WorkspaceLeaf } from 'obsidian';
 import { ProjectResolver } from './modules/ProjectResolver';
 import { VariableCache } from './modules/VariableCache';
 import { createPlaceholderRendererPlugin } from './modules/PlaceholderRenderer';
 import { ReadingPostProcessor } from './modules/ReadingPostProcessor';
 import { QuartoVariablesSettingTab } from './settings/SettingsTab';
+import { VariablesView, VARIABLES_VIEW_TYPE } from './views/VariablesView';
 import { PluginSettings, DEFAULT_SETTINGS, ProjectInfo } from './types';
 
 export default class QuartoVariablesPlugin extends Plugin {
@@ -72,6 +73,23 @@ export default class QuartoVariablesPlugin extends Plugin {
     
     this.addSettingTab(new QuartoVariablesSettingTab(this.app, this));
     
+    // Register the Variables View
+    this.registerView(
+      VARIABLES_VIEW_TYPE,
+      (leaf) => new VariablesView(leaf, this, this.projectResolver, this.variableCache, this.settings)
+    );
+    
+    // Add command to open Variables pane
+    this.addCommand({
+      id: 'open-variables-pane',
+      name: 'Open Variables Pane',
+      callback: () => {
+        if (this.settings.enableVariablesPane) {
+          this.activateVariablesView();
+        }
+      }
+    });
+    
     this.addCommand({
       id: 'refresh-variables',
       name: 'Refresh Quarto Variables',
@@ -107,6 +125,11 @@ export default class QuartoVariablesPlugin extends Plugin {
     if (projectInfo) {
       this.preloadVariablesInBackground(projectInfo);
       
+      // Auto-open variables pane if enabled
+      if (this.settings.enableVariablesPane && this.settings.autoOpenVariablesPane) {
+        await this.activateVariablesView();
+      }
+      
       if (this.settings.debugMode) {
         console.log('Project root:', projectInfo.root);
         console.log('Variables path:', projectInfo.variablesPath);
@@ -141,8 +164,38 @@ export default class QuartoVariablesPlugin extends Plugin {
     });
   }
 
+  async activateVariablesView(): Promise<void> {
+    if (!this.settings.enableVariablesPane) {
+      return;
+    }
+
+    const { workspace } = this.app;
+
+    let leaf: WorkspaceLeaf | null = null;
+    const leaves = workspace.getLeavesOfType(VARIABLES_VIEW_TYPE);
+
+    if (leaves.length > 0) {
+      // Variables pane already exists, just reveal it
+      leaf = leaves[0];
+    } else {
+      // Create new Variables pane in the right sidebar
+      leaf = workspace.getRightLeaf(false);
+      if (leaf) {
+        await leaf.setViewState({ type: VARIABLES_VIEW_TYPE, active: true });
+      }
+    }
+
+    if (leaf) {
+      workspace.revealLeaf(leaf);
+    }
+  }
+
   onunload() {
     console.log('Unloading Quarto Variables plugin');
+    
+    // Close any open Variables views
+    this.app.workspace.detachLeavesOfType(VARIABLES_VIEW_TYPE);
+    
     this.variableCache.destroy();
     this.projectResolver.clearCache();
   }

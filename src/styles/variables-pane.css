@@ -1,44 +1,3 @@
-/* Quarto Variables Plugin Styles */
-
-.quarto-variable {
-  font-weight: 500;
-  background: rgba(116, 58, 237, 0.1);
-  border-radius: 2px;
-  padding: 1px 2px;
-}
-
-.quarto-variable-unresolved {
-  color: #ef4444 !important;
-  text-decoration: underline;
-  text-decoration-style: wavy;
-  text-decoration-color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-/* Dark mode support */
-.theme-dark .quarto-variable {
-  background: rgba(139, 92, 246, 0.15);
-}
-
-.theme-dark .quarto-variable-unresolved {
-  background: rgba(239, 68, 68, 0.15);
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .quarto-variable {
-    border: 1px solid currentColor;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .quarto-variable,
-  .quarto-variable-unresolved {
-    transition: none;
-  }
-}
-
 /* Variables Pane Styles - Ultra-compact design with minimal vertical spacing */
 
 /* Main Container */
@@ -316,20 +275,9 @@
   flex: 1;
 }
 
-.variable-value-editable:hover {
+.variable-value:hover {
   background: var(--background-modifier-hover);
   color: var(--text-normal);
-}
-
-.variable-value-structural {
-  color: var(--text-faint);
-  font-style: italic;
-  cursor: default;
-}
-
-.variable-value-structural:hover {
-  background: none;
-  color: var(--text-faint);
 }
 
 .variable-comment {
@@ -516,7 +464,7 @@ textarea.variable-editor-input {
   margin-top: 1px;
 }
 
-/* Dark mode adjustments for variables pane */
+/* Dark mode adjustments */
 .theme-dark .section-header-container {
   background: var(--background-primary);
 }
@@ -525,46 +473,56 @@ textarea.variable-editor-input {
   background: var(--background-primary);
 }
 
-/* Keyboard navigation and focus styles */
-.variables-pane-focused {
-  outline: 2px solid var(--interactive-accent);
-  outline-offset: -2px;
-  border-radius: 4px;
+/* Scrollbar styling */
+.variables-pane-content::-webkit-scrollbar {
+  width: 8px;
 }
 
-.variable-item-focused {
-  background: var(--interactive-accent) !important;
-  color: var(--text-on-accent) !important;
-  border-radius: 3px;
-}
-
-.variable-item-focused .variable-key,
-.variable-item-focused .variable-value {
-  color: var(--text-on-accent) !important;
-}
-
-.nested-group-focused {
-  background: var(--interactive-accent) !important;
-  border-radius: 3px;
-}
-
-.nested-group-focused .nested-group-key {
-  color: var(--text-on-accent) !important;
-}
-
-/* Keyboard shortcut help */
-.variables-pane-shortcuts {
-  font-size: 10px;
-  color: var(--text-faint);
-  padding: 4px 8px;
-  border-top: 1px solid var(--background-modifier-border);
+.variables-pane-content::-webkit-scrollbar-track {
   background: var(--background-secondary);
 }
 
-.variables-pane-shortcuts kbd {
+.variables-pane-content::-webkit-scrollbar-thumb {
   background: var(--background-modifier-border);
-  border-radius: 2px;
-  padding: 1px 3px;
-  font-size: 9px;
-  font-family: var(--font-monospace);
+  border-radius: 4px;
+}
+
+.variables-pane-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
+
+/* Responsive adjustments for smaller panes */
+@container (max-width: 200px) {
+  .variable-item-key {
+    min-width: 60px;
+  }
+  
+  .variable-key,
+  .variable-value {
+    font-size: 10px;
+  }
+  
+  .section-title {
+    font-size: 10px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .variable-item:hover {
+    border: 1px solid var(--text-normal);
+  }
+  
+  .section-header-container:hover {
+    border-color: var(--text-normal);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .variable-item,
+  .section-header-container,
+  .nested-group-header {
+    transition: none;
+  }
 }

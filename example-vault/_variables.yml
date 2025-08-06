@@ -9,6 +9,12 @@ project:
   description: "Live preview of Quarto variables in Obsidian"
   repo: "https://github.com/example/quarto-variables"
 
+# Model configuration - test case for the bug
+model:
+  model_1: "value 1"
+  model_2: "value 2"
+  model_3: "value 3"
+
 # Statistics
 stats:
   participants: 150
@@ -31,6 +37,14 @@ methods:
   - "Qualitative Analysis"
   - "Quantitative Survey"
   - "Mixed Methods"
+
+# Deep nesting test
+complex:
+  nested:
+    deep:
+      value: "nested deep value"
+      number: 42
+  simple: "simple value"
 
 # Scientific notation
 constants:
