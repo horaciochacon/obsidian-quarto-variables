@@ -37,7 +37,8 @@ export class NestedGroup {
 
     // Add indentation based on level
     if (this.node.level > 0) {
-      this.element.style.paddingLeft = `${this.node.level * 6}px`;
+      const levelClass = `variables-level-${Math.min(this.node.level, 10)}`;
+      this.element.classList.add(levelClass);
     }
 
     // Create header
@@ -48,7 +49,7 @@ export class NestedGroup {
     const toggleButton = document.createElement('button');
     toggleButton.addClass('nested-group-toggle');
     toggleButton.setAttribute('aria-label', 'Toggle group');
-    toggleButton.innerHTML = this.getToggleIcon();
+    toggleButton.setText(this.getToggleIcon());
     toggleButton.addEventListener('click', () => this.toggle());
     headerElement.appendChild(toggleButton);
 
@@ -122,8 +123,7 @@ export class NestedGroup {
       const childCount = this.node.children?.length || 0;
       return `{${childCount} ${childCount === 1 ? 'property' : 'properties'}}`;
     } else if (this.node.type === 'array') {
-      const array = this.node.value as any[];
-      const length = Array.isArray(array) ? array.length : 0;
+      const length = Array.isArray(this.node.value) ? this.node.value.length : 0;
       return `[${length} ${length === 1 ? 'item' : 'items'}]`;
     }
     return `{${this.node.type}}`;
@@ -152,7 +152,7 @@ export class NestedGroup {
       const headerElement = this.element.querySelector('.nested-group-header');
       
       if (toggleButton) {
-        toggleButton.innerHTML = this.getToggleIcon();
+        toggleButton.setText(this.getToggleIcon());
       }
       
       if (headerElement) {
@@ -160,7 +160,7 @@ export class NestedGroup {
       }
       
       if (this.childrenContainer) {
-        this.childrenContainer.style.display = collapsed ? 'none' : 'block';
+        this.childrenContainer.toggleClass('variables-collapsed', collapsed);
       }
       
       this.element.setAttribute('data-collapsed', String(this.isCollapsed));
@@ -186,7 +186,7 @@ export class NestedGroup {
 
   public setVisible(visible: boolean): void {
     if (this.element) {
-      this.element.style.display = visible ? 'block' : 'none';
+      this.element.toggleClass('variables-hidden', !visible);
     }
   }
 

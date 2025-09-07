@@ -170,7 +170,9 @@ export class VariablesView extends ItemView {
           case 'n':
             // Create new variable (placeholder for future enhancement)
             e.preventDefault();
-            console.log('Create new variable shortcut pressed');
+            if (this.settings.debugMode) {
+              console.log('Create new variable shortcut pressed');
+            }
             break;
         }
       } else {
@@ -366,13 +368,15 @@ export class VariablesView extends ItemView {
     if (content) {
       content.empty();
       const message = content.createDiv('variables-pane-message');
-      message.innerHTML = `
-        <div class="variables-pane-icon">📄</div>
-        <div class="variables-pane-text">
-          <strong>No Quarto Document</strong>
-          <p>Open a .qmd file to view its variables</p>
-        </div>
-      `;
+      
+      const icon = message.createDiv('variables-pane-icon');
+      icon.setText('📄');
+      
+      const textDiv = message.createDiv('variables-pane-text');
+      const strong = textDiv.createEl('strong');
+      strong.setText('No Quarto Document');
+      const p = textDiv.createEl('p');
+      p.setText('Open a .qmd file to view its variables');
     }
   }
 
@@ -384,13 +388,18 @@ export class VariablesView extends ItemView {
     if (content) {
       content.empty();
       const message = content.createDiv('variables-pane-message');
-      message.innerHTML = `
-        <div class="variables-pane-icon">📁</div>
-        <div class="variables-pane-text">
-          <strong>No Quarto Project</strong>
-          <p>This file is not part of a Quarto project. Create a <code>_quarto.yml</code> file to define a project.</p>
-        </div>
-      `;
+      
+      const icon = message.createDiv('variables-pane-icon');
+      icon.setText('📁');
+      
+      const textDiv = message.createDiv('variables-pane-text');
+      const strong = textDiv.createEl('strong');
+      strong.setText('No Quarto Project');
+      const p = textDiv.createEl('p');
+      p.setText('This file is not part of a Quarto project. Create a ');
+      const code = p.createEl('code');
+      code.setText('_quarto.yml');
+      p.appendText(' file to define a project.');
     }
   }
 
@@ -401,17 +410,22 @@ export class VariablesView extends ItemView {
     if (content) {
       content.empty();
       const message = content.createDiv('variables-pane-message');
-      message.innerHTML = `
-        <div class="variables-pane-icon">📝</div>
-        <div class="variables-pane-text">
-          <strong>No Variables File</strong>
-          <p>Create a <code>_variables.yml</code> file in your project to define variables.</p>
-          <button class="variables-pane-create-btn">Create _variables.yml</button>
-        </div>
-      `;
       
-      const createBtn = content.querySelector('.variables-pane-create-btn') as HTMLButtonElement;
-      createBtn?.addEventListener('click', () => this.createVariablesFile());
+      const icon = message.createDiv('variables-pane-icon');
+      icon.setText('📝');
+      
+      const textDiv = message.createDiv('variables-pane-text');
+      const strong = textDiv.createEl('strong');
+      strong.setText('No Variables File');
+      const p = textDiv.createEl('p');
+      p.setText('Create a ');
+      const code = p.createEl('code');
+      code.setText('_variables.yml');
+      p.appendText(' file in your project to define variables.');
+      
+      const createBtn = textDiv.createEl('button', { cls: 'variables-pane-create-btn' });
+      createBtn.setText('Create _variables.yml');
+      createBtn.addEventListener('click', () => this.createVariablesFile());
     }
   }
 
@@ -420,13 +434,15 @@ export class VariablesView extends ItemView {
     if (content) {
       content.empty();
       const errorDiv = content.createDiv('variables-pane-message variables-pane-error');
-      errorDiv.innerHTML = `
-        <div class="variables-pane-icon">⚠️</div>
-        <div class="variables-pane-text">
-          <strong>Error</strong>
-          <p>${message}</p>
-        </div>
-      `;
+      
+      const icon = errorDiv.createDiv('variables-pane-icon');
+      icon.setText('⚠️');
+      
+      const textDiv = errorDiv.createDiv('variables-pane-text');
+      const strong = textDiv.createEl('strong');
+      strong.setText('Error');
+      const p = textDiv.createEl('p');
+      p.setText(message);
     }
   }
 

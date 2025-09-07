@@ -36,7 +36,8 @@ export class VariableItem {
 
     // Add indentation based on level
     if (this.node.level > 0) {
-      this.element.style.paddingLeft = `${this.node.level * 6}px`;
+      const levelClass = `variables-level-${Math.min(this.node.level, 10)}`;
+      this.element.classList.add(levelClass);
     }
 
     // Create key section
@@ -123,7 +124,7 @@ export class VariableItem {
       case 'string':
         return `"${this.node.value}"`;
       case 'array':
-        const array = this.node.value as any[];
+        const array = Array.isArray(this.node.value) ? this.node.value : [];
         if (array.length === 0) return '[]';
         if (array.length <= 3) {
           return `[${array.map(v => typeof v === 'string' ? `"${v}"` : String(v)).join(', ')}]`;
@@ -148,7 +149,9 @@ export class VariableItem {
 
     // Don't allow editing of structural parent nodes
     if (this.node.isStructuralParent && this.node.children && this.node.children.length > 0) {
-      console.log('Cannot edit structural parent node:', this.node.key);
+      if (this.settings.debugMode) {
+        console.log('Cannot edit structural parent node:', this.node.key);
+      }
       return;
     }
 
@@ -259,7 +262,7 @@ export class VariableItem {
 
   public setVisible(visible: boolean): void {
     if (this.element) {
-      this.element.style.display = visible ? 'flex' : 'none';
+      this.element.toggleClass('variables-hidden', !visible);
     }
   }
 

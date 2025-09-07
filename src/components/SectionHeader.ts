@@ -25,7 +25,7 @@ export class SectionHeader {
     const toggleButton = document.createElement('button');
     toggleButton.addClass('section-toggle');
     toggleButton.setAttribute('aria-label', 'Toggle section');
-    toggleButton.innerHTML = this.getToggleIcon();
+    toggleButton.setText(this.getToggleIcon());
     toggleButton.addEventListener('click', () => this.toggle());
     headerContainer.appendChild(toggleButton);
 
@@ -78,7 +78,7 @@ export class SectionHeader {
       const headerContainer = this.element.querySelector('.section-header-container');
       
       if (toggleButton) {
-        toggleButton.innerHTML = this.getToggleIcon();
+        toggleButton.setText(this.getToggleIcon());
       }
       
       if (headerContainer) {
@@ -106,7 +106,7 @@ export class SectionHeader {
       const headerContainer = this.element.querySelector('.section-header-container');
       
       if (toggleButton) {
-        toggleButton.innerHTML = this.getToggleIcon();
+        toggleButton.setText(this.getToggleIcon());
       }
       
       if (headerContainer) {
@@ -126,7 +126,7 @@ export class SectionHeader {
 
   public setVisible(visible: boolean): void {
     if (this.element) {
-      this.element.style.display = visible ? 'block' : 'none';
+      this.element.toggleClass('variables-hidden', !visible);
     }
   }
 

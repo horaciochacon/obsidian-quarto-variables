@@ -76,18 +76,15 @@ export class ReadingPostProcessor {
         
         if (value !== undefined) {
           const span = document.createElement('span');
-          span.className = this.settings.placeholderClass;
+          span.className = `${this.settings.placeholderClass} quarto-variable-resolved`;
           if (this.settings.placeholderColor) {
-            span.style.color = this.settings.placeholderColor;
+            span.style.setProperty('--placeholder-color', this.settings.placeholderColor);
           }
           span.textContent = value;
           fragments.push(span);
         } else if (this.settings.highlightUnresolvedVariables) {
           const span = document.createElement('span');
           span.className = `${this.settings.placeholderClass} quarto-variable-unresolved`;
-          span.style.textDecoration = 'underline';
-          span.style.textDecorationStyle = 'wavy';
-          span.style.textDecorationColor = '#ef4444';
           span.textContent = text.substring(match.from, match.to);
           fragments.push(span);
         } else {

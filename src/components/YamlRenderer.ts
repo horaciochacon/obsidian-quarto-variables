@@ -66,7 +66,7 @@ export class YamlRenderer {
     let isCollapsed = false;
     sectionHeader.onToggle((collapsed) => {
       isCollapsed = collapsed;
-      sectionContent.style.display = collapsed ? 'none' : 'block';
+      sectionContent.toggleClass('variables-collapsed', collapsed);
     });
 
     // Render section nodes
@@ -238,13 +238,16 @@ export class YamlRenderer {
   private renderEmptyState(): void {
     const emptyDiv = document.createElement('div');
     emptyDiv.addClass('variables-pane-message');
-    emptyDiv.innerHTML = `
-      <div class="variables-pane-icon">📝</div>
-      <div class="variables-pane-text">
-        <strong>Empty Variables File</strong>
-        <p>Add some variables to your _variables.yml file to see them here.</p>
-      </div>
-    `;
+    
+    const icon = emptyDiv.createDiv('variables-pane-icon');
+    icon.setText('📝');
+    
+    const textDiv = emptyDiv.createDiv('variables-pane-text');
+    const strong = textDiv.createEl('strong');
+    strong.setText('Empty Variables File');
+    const p = textDiv.createEl('p');
+    p.setText('Add some variables to your _variables.yml file to see them here.');
+    
     this.container.appendChild(emptyDiv);
   }
 
@@ -260,7 +263,9 @@ export class YamlRenderer {
 
   public async updateNodeValue(nodeId: string, newValue: any): Promise<boolean> {
     // This will be implemented when we create the VariableWriter
-    console.log(`Updating node ${nodeId} to:`, newValue);
+    if (this.settings.debugMode) {
+      console.log(`Updating node ${nodeId} to:`, newValue);
+    }
     
     // For now, just update the UI
     const variableItem = this.variableItems.get(nodeId);

@@ -149,7 +149,7 @@ export class VariableEditor {
 
   private createArrayEditor(): void {
     this.inputElement = document.createElement('textarea');
-    (this.inputElement as HTMLTextAreaElement).rows = Math.min(Math.max(3, (this.node.value as any[])?.length || 1), 10);
+    (this.inputElement as HTMLTextAreaElement).rows = Math.min(Math.max(3, Array.isArray(this.node.value) ? this.node.value.length : 1), 10);
     this.inputElement.addClass('variable-editor-input');
     this.inputElement.placeholder = 'Enter one item per line';
     

@@ -16,13 +16,11 @@ export class VariableWidget extends WidgetType {
     
     if (!this.isResolved && this.settings.highlightUnresolvedVariables) {
       span.classList.add('quarto-variable-unresolved');
-      span.style.textDecoration = 'underline';
-      span.style.textDecorationStyle = 'wavy';
-      span.style.textDecorationColor = '#ef4444';
-    }
-    
-    if (this.settings.placeholderColor && this.isResolved) {
-      span.style.color = this.settings.placeholderColor;
+    } else if (this.isResolved) {
+      span.classList.add('quarto-variable-resolved');
+      if (this.settings.placeholderColor) {
+        span.style.setProperty('--placeholder-color', this.settings.placeholderColor);
+      }
     }
     
     span.innerText = this.value;

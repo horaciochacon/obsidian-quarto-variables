@@ -526,3 +526,41 @@ textarea.variable-editor-input {
     transition: none;
   }
 }
+
+/* Variable styling classes - replaces inline styles */
+.quarto-variable-resolved {
+  color: var(--placeholder-color, var(--text-accent));
+}
+
+.quarto-variable-unresolved {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #ef4444;
+}
+
+/* Dynamic visibility classes */
+.variables-hidden {
+  display: none !important;
+}
+
+.variables-collapsed {
+  display: none !important;
+}
+
+/* Ensure hidden class overrides flex display */
+.variable-item.variables-hidden {
+  display: none !important;
+}
+
+/* Level-based indentation classes */
+.variables-level-0 { padding-left: 0px; }
+.variables-level-1 { padding-left: 6px; }
+.variables-level-2 { padding-left: 12px; }
+.variables-level-3 { padding-left: 18px; }
+.variables-level-4 { padding-left: 24px; }
+.variables-level-5 { padding-left: 30px; }
+.variables-level-6 { padding-left: 36px; }
+.variables-level-7 { padding-left: 42px; }
+.variables-level-8 { padding-left: 48px; }
+.variables-level-9 { padding-left: 54px; }
+.variables-level-10 { padding-left: 60px; }

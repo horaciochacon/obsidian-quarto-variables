@@ -14,9 +14,11 @@ export default class QuartoVariablesPlugin extends Plugin {
   private readingPostProcessor!: ReadingPostProcessor;
 
   async onload() {
-    console.log('Loading Quarto Variables plugin');
-    
     await this.loadSettings();
+    
+    if (this.settings.debugMode) {
+      console.log('Loading Quarto Variables plugin');
+    }
     
     this.projectResolver = new ProjectResolver(this.app);
     this.variableCache = new VariableCache(this.app);
@@ -92,7 +94,7 @@ export default class QuartoVariablesPlugin extends Plugin {
     
     this.addCommand({
       id: 'refresh-variables',
-      name: 'Refresh Quarto Variables',
+      name: 'Refresh Variables',
       callback: () => {
         this.projectResolver.clearCache();
         this.variableCache.clearCache();
@@ -191,10 +193,9 @@ export default class QuartoVariablesPlugin extends Plugin {
   }
 
   onunload() {
-    console.log('Unloading Quarto Variables plugin');
-    
-    // Close any open Variables views
-    this.app.workspace.detachLeavesOfType(VARIABLES_VIEW_TYPE);
+    if (this.settings?.debugMode) {
+      console.log('Unloading Quarto Variables plugin');
+    }
     
     this.variableCache.destroy();
     this.projectResolver.clearCache();

@@ -95,11 +95,6 @@ export class QuartoVariablesSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.enableVariablesPane = value;
           await this.plugin.saveSettings();
-          
-          // If disabling, close any open panes
-          if (!value) {
-            this.app.workspace.detachLeavesOfType('variables-pane');
-          }
         }));
 
     new Setting(containerEl)
