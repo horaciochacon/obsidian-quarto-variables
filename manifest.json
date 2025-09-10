@@ -1,7 +1,7 @@
 {
   "id": "quarto-variables",
   "name": "Quarto Variables",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.5.0",
   "description": "Live preview of Quarto variables from _variables.yml files",
   "author": "Horacio Chacon",
